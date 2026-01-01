@@ -1,15 +1,5 @@
 #!/usr/bin/env ruby
 
-require 'thor'
-require_relative '../lib/anki_generator'
-
-class AnkiCLI < Thor
-  desc 'generate DECK_NAME YAML_FILE OUTPUT_FILE', 'Generate an Anki .apkg deck from a YAML file'
-  def generate(deck_name, yaml_file, output_file)
-    anki_generator = AnkiGenerator.new(name: deck_name, deck_file: yaml_file)
-    anki_generator.generate_apkg(output_path: output_file)
-    puts "Anki deck '#{deck_name}' has been successfully created as #{output_file}!"
-  end
-end
+require_relative '../lib/anki_cli'
 
 AnkiCLI.start(ARGV)
