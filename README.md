@@ -16,6 +16,8 @@ A Ruby tool to generate Anki .apkg files from YAML definitions with AI-powered c
 
 ## Installation
 
+**Requirements**: Ruby 3.1 or higher
+
 1. Clone the repository
 2. Install dependencies:
    ```bash
@@ -342,13 +344,11 @@ rake demo_attachments         # Demo with file attachments
 
 ### GitHub Actions CI/CD
 
-The project includes several GitHub Actions workflows:
+The project includes minimal GitHub Actions workflows:
 
-- **`ruby.yml`** - Main CI pipeline testing Ruby 3.0, 3.1, 3.2
-- **`ci.yml`** - Extended CI with multiple OS and Ruby versions
+- **`ruby.yml`** - Main CI pipeline testing Ruby 3.1, 3.2, 3.3
 - **`release.yml`** - Automated releases when tags are pushed
 - **`manual-test.yml`** - Manual workflow for testing specific scenarios
-- **`dependabot-auto-merge.yml`** - Auto-merge dependency updates
 
 To trigger a release:
 ```bash

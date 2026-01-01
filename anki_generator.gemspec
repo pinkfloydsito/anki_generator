@@ -19,11 +19,16 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'json', '~> 2.0'
   spec.add_dependency 'dotenv', '~> 2.8'
 
-  spec.add_development_dependency 'minitest', '~> 5.25'
+  spec.add_development_dependency 'minitest', '~> 5.20'
   spec.add_development_dependency 'rake', '~> 13.0'
   spec.add_development_dependency 'rubocop', '~> 1.0'
+  
+  # Ruby 3.3+ compatibility
+  if RUBY_VERSION >= '3.3.0'
+    spec.add_development_dependency 'mutex_m'
+  end
 
-  spec.required_ruby_version = '>= 2.7.0'
+  spec.required_ruby_version = '>= 3.1.0'
   
   spec.metadata = {
     'homepage_uri' => spec.homepage,

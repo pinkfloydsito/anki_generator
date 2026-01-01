@@ -1,80 +1,65 @@
 # CI/CD Setup Guide
 
-This document explains the GitHub Actions workflows and how to handle Ruby setup issues.
+This document explains the minimal GitHub Actions workflows and Ruby setup.
 
 ## Workflows Overview
 
 ### 1. `ruby.yml` - Main CI Pipeline
 - **Trigger**: Push/PR to main branch
-- **Ruby Versions**: 3.0, 3.1, 3.2
-- **Actions**: Test, lint, build
-- **Fixed Issues**: Updated to use `ruby/setup-ruby@v1` instead of specific commit hash
+- **Ruby Versions**: 3.1, 3.2, 3.3 (current versions)
+- **Actions**: Test and build gem
+- **Status**: ✅ Minimal and reliable
 
-### 2. `ci.yml` - Extended CI Pipeline
-- **Trigger**: Push/PR to main/develop branches
-- **Ruby Versions**: 3.0, 3.1, 3.2, 3.3
-- **OS Support**: Ubuntu, macOS
-- **Features**: 
-  - Multi-OS testing
-  - Self-hosted runner support (disabled by default)
-  - Gem verification
-  - Artifact upload
-
-### 3. `release.yml` - Automated Releases
+### 2. `release.yml` - Automated Releases
 - **Trigger**: Git tags (v*)
 - **Actions**: Test, build, create GitHub release
 - **Artifacts**: Uploads gem file to release
-- **Optional**: RubyGems publishing (commented out)
 
-### 4. `manual-test.yml` - Manual Testing
+### 3. `manual-test.yml` - Manual Testing
 - **Trigger**: Manual workflow dispatch
 - **Features**: 
-  - Choose Ruby version
+  - Choose Ruby version (3.1, 3.2, 3.3)
   - Optional demo runs
   - Full CLI testing
 
-### 5. `dependabot-auto-merge.yml` - Dependency Management
-- **Trigger**: Dependabot PRs
-- **Actions**: Auto-merge minor/patch updates after tests pass
+## Ruby Version Support
+
+### Supported Versions
+- ✅ **Ruby 3.1**: Fully supported and tested
+- ✅ **Ruby 3.2**: Fully supported and tested  
+- ✅ **Ruby 3.3**: Fully supported and tested
+
+### Requirements
+- Minimum Ruby version: 3.1.0
+- Minitest: ~> 5.20 (for Ruby 3.3+ compatibility)
+- Additional gems for Ruby 3.3+: mutex_m (automatically included)
 
 ## Ruby Setup Issues
 
 ### Problem: Self-Hosted Runner Detection
 ```
-Error: The current runner (ubuntu-24.04-x64) was detected as self-hosted because the platform does not match a GitHub-hosted runner image
+Error: The current runner (ubuntu-24.04-x64) was detected as self-hosted
 ```
 
 ### Solutions:
 
-#### Option 1: Use Updated Workflow
-The `ruby.yml` workflow has been updated to use `ruby/setup-ruby@v1` which handles newer Ubuntu versions better.
+#### Option 1: Use Updated Workflow (Recommended)
+The `ruby.yml` workflow uses `ruby/setup-ruby@v1` which handles newer Ubuntu versions.
 
 #### Option 2: Manual Ruby Installation (Self-Hosted Runners)
 ```bash
 # Run the setup script
-./scripts/setup-ruby-self-hosted.sh 3.2.0
+./scripts/setup-ruby-self-hosted.sh 3.3.0
 
 # Or manually:
-ruby-build 3.2.0 /opt/hostedtoolcache/Ruby/3.2.0/x64
-touch /opt/hostedtoolcache/Ruby/3.2.0/x64.complete
+ruby-build 3.3.0 /opt/hostedtoolcache/Ruby/3.3.0/x64
+touch /opt/hostedtoolcache/Ruby/3.3.0/x64.complete
 ```
 
-#### Option 3: Enable Self-Hosted Job in CI
-In `.github/workflows/ci.yml`, change:
-```yaml
-if: false  # Set to true if you want to enable self-hosted testing
-```
-to:
-```yaml
-if: true
-```
-
-#### Option 4: Use Different Runner
-Change the runner in your workflow:
+#### Option 3: Use Different Runner
 ```yaml
 runs-on: ubuntu-22.04  # Instead of ubuntu-latest
 ```
-
 ## Testing Locally
 
 Before pushing, test locally:
@@ -105,7 +90,7 @@ anki_generator help
    git push origin v1.2.0
    ```
 5. **GitHub Actions will**:
-   - Run tests
+   - Run tests on Ruby 3.1, 3.2, 3.3
    - Build gem
    - Create GitHub release
    - Upload gem artifact
@@ -113,38 +98,22 @@ anki_generator help
 ## Troubleshooting
 
 ### Ruby Version Issues
-- Check supported Ruby versions in `.ruby-version` or gemspec
+- Supported: Ruby 3.1, 3.2, 3.3
+- Use `ruby scripts/debug-ruby-version.rb` to diagnose issues
 - Ensure bundler compatibility
-- Test with multiple Ruby versions locally using rbenv/rvm
 
 ### Dependency Issues
 - Run `bundle update` to update dependencies
 - Check for security vulnerabilities: `bundle audit`
-- Review Dependabot PRs regularly
 
 ### Build Issues
 - Ensure all files are included in gemspec
 - Check for missing dependencies
 - Verify executable permissions on scripts
 
-### Self-Hosted Runner Issues
-- Ensure Ruby is in PATH
-- Check tool cache permissions
-- Verify network access to rubygems.org
-- Use the provided setup script
-
-## Monitoring
-
-- Check GitHub Actions tab for workflow status
-- Review failed builds and logs
-- Monitor dependency updates from Dependabot
-- Watch for security alerts
-
 ## Best Practices
 
-1. **Always test locally** before pushing
-2. **Keep dependencies updated** via Dependabot
-3. **Use semantic versioning** for releases
-4. **Update CHANGELOG.md** for each release
-5. **Test on multiple Ruby versions** before major releases
-6. **Monitor CI/CD pipeline** health regularly
+1. **Test locally** before pushing
+2. **Use supported Ruby versions** (3.1-3.3)
+3. **Update CHANGELOG.md** for each release
+4. **Monitor CI pipeline** health regularly
