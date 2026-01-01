@@ -8,7 +8,7 @@ Gem::Specification.new do |spec|
   spec.homepage      = 'https://github.com/pinkfloydsito/anki_generator'
   spec.license       = 'MIT'
 
-  spec.files         = Dir['lib/**/*.rb', 'bin/*', 'README.md']
+  spec.files         = Dir['lib/**/*.rb', 'bin/*', 'README.md', 'CHANGELOG.md']
   spec.bindir        = 'bin'
   spec.executables   = ['anki_generator']
   spec.require_paths = ['lib']

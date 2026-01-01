@@ -139,6 +139,29 @@ task :version do
   puts "Anki Generator version: #{File.read('anki_generator.gemspec').match(/spec\.version\s*=\s*['"]([^'"]+)['"]/)[1]}"
 end
 
+desc 'Show changelog for current version'
+task :changelog do
+  version = File.read('anki_generator.gemspec').match(/spec\.version\s*=\s*['"]([^'"]+)['"]/)[1]
+  
+  if File.exist?('CHANGELOG.md')
+    changelog = File.read('CHANGELOG.md')
+    
+    # Extract current version section
+    version_section = changelog.match(/## \[#{Regexp.escape(version)}\].*?(?=## \[|\z)/m)
+    
+    if version_section
+      puts "Changelog for version #{version}:"
+      puts "=" * 40
+      puts version_section[0]
+    else
+      puts "No changelog entry found for version #{version}"
+      puts "Please update CHANGELOG.md"
+    end
+  else
+    puts "CHANGELOG.md not found"
+  end
+end
+
 desc 'Lint code with RuboCop'
 task :lint do
   sh 'rubocop lib/ tests/ --format simple'

@@ -378,6 +378,7 @@ rake demo_api                 # Test API connection
 # Utilities
 rake help                     # Show CLI help
 rake version                  # Show version info
+rake changelog                # Show changelog for current version
 rake release_prep             # Prepare for release
 ```
 
@@ -421,7 +422,12 @@ The sync feature allows you to:
 2. Create a feature branch
 3. Add tests for new functionality
 4. Ensure all tests pass
-5. Submit a pull request
+5. Update CHANGELOG.md with your changes
+6. Submit a pull request
+
+## Changelog
+
+See [CHANGELOG.md](CHANGELOG.md) for detailed version history and changes.
 
 ## License
 
