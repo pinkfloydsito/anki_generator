@@ -1,0 +1,77 @@
+name: Manual Test
+
+on:
+  workflow_dispatch:
+    inputs:
+      ruby_version:
+        description: 'Ruby version to test'
+        required: true
+        default: '3.2'
+        type: choice
+        options:
+        - '3.0'
+        - '3.1'
+        - '3.2'
+        - '3.3'
+      run_demos:
+        description: 'Run demo commands'
+        required: false
+        default: false
+        type: boolean
+
+permissions:
+  contents: read
+
+jobs:
+  manual-test:
+    name: Manual Test Ruby ${{ inputs.ruby_version }}
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: ${{ inputs.ruby_version }}
+        bundler-cache: true
+
+    - name: Show Ruby info
+      run: |
+        ruby --version
+        gem --version
+        bundle --version
+
+    - name: Run tests
+      run: bundle exec rake test
+
+    - name: Show rake tasks
+      run: bundle exec rake -T
+
+    - name: Build gem
+      run: bundle exec rake build
+
+    - name: Install gem locally
+      run: bundle exec rake install_local
+
+    - name: Test CLI
+      run: |
+        anki_generator help
+        anki_generator help generate_yaml
+        anki_generator help prompt_to_deck
+
+    - name: Create examples
+      run: bundle exec rake examples
+
+    - name: Show version and changelog
+      run: |
+        bundle exec rake version
+        bundle exec rake changelog
+
+    - name: Run demos (if enabled)
+      if: inputs.run_demos == true
+      run: |
+        echo "Demo commands would run here (requires API key)"
+        echo "bundle exec rake demo_api"
+        echo "bundle exec rake demo_attachments"

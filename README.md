@@ -340,6 +340,22 @@ rake examples                 # Create example files
 rake demo_attachments         # Demo with file attachments
 ```
 
+### GitHub Actions CI/CD
+
+The project includes several GitHub Actions workflows:
+
+- **`ruby.yml`** - Main CI pipeline testing Ruby 3.0, 3.1, 3.2
+- **`ci.yml`** - Extended CI with multiple OS and Ruby versions
+- **`release.yml`** - Automated releases when tags are pushed
+- **`manual-test.yml`** - Manual workflow for testing specific scenarios
+- **`dependabot-auto-merge.yml`** - Auto-merge dependency updates
+
+To trigger a release:
+```bash
+git tag v1.1.0
+git push origin v1.1.0
+```
+
 ### Running Tests
 
 ```bash
